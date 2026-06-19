@@ -1,26 +1,36 @@
 import express from 'express';
-import cors from 'cors';
+import { z } from 'zod';
 
-const app = express();
-app.use(cors());
+export const app = express();
 app.use(express.json());
 
 app.get('/health', (req, res) => {
-    res.json({ status: 'healthy', domain: 'blog', uptime: process.uptime() });
+  res.json({ status: 'healthy', service: 'TS-NextJS-Blog' });
 });
 
-app.post('/api/v1/process', (req, res) => {
-    const { payload } = req.body;
-    if (!payload) return res.status(400).json({ error: 'Missing payload' });
-    res.status(201).json({ 
-        success: true, 
-        processed: payload, 
-        timestamp: new Date().toISOString() 
-    });
+const PostSchema = z.object({
+  title: z.string().min(3),
+  content: z.string().min(10)
 });
+
+const posts: any[] = [];
+
+app.post('/api/posts', (req, res) => {
+  try {
+    const data = PostSchema.parse(req.body);
+    const post = { id: posts.length + 1, ...data, published: new Date().toISOString() };
+    posts.push(post);
+    res.json(post);
+  } catch (e) {
+    res.status(400).json({ error: 'Invalid post data' });
+  }
+});
+
+app.get('/api/posts', (req, res) => {
+  res.json(posts);
+});
+
 
 if (require.main === module) {
-    app.listen(3000, () => console.log('TS-NextJS-Blog API running on port 3000'));
+  app.listen(3000, () => console.log('Server running on port 3000'));
 }
-
-export default app;
