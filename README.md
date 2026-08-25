@@ -1,44 +1,40 @@
-<!-- PORTFOLIO PROJECT PROFILE: maintained by the repository owner -->
+# Sky Content API
 
-## Project profile and code-audit snapshot
+**Status: engineering beta.** This repository is a focused TypeScript/Express content-service primitive. The historical repository name is retained for GitHub continuity, but the active implementation is **not a Next.js SSR application**.
 
-**What this is:** **TS-NextJS-Blog** is a public repository described as: “SSR blog built with Next.js and Markdown support. #SkyCoin4444 #AI #Blockchain #DevOps #Innovation” Its dominant language signals are **TypeScript (2 files), JavaScript (1 files)**.
+## Implemented
 
-**Why it has value:** Its value is best understood through the implementation evidence currently present in the repository: **18 tracked files** were observed in the shallow audit, with the source structure and existing documentation providing the project’s specific context. This README does not treat a prototype, experiment, or archive as a production system without supporting evidence.
+- Create bounded text posts with optional bounded tags.
+- List recent posts with a 1–100 result limit.
+- Retrieve posts by positive integer ID.
+- 32 KiB JSON request limit.
+- `/healthz` and `/readyz` operational endpoints.
+- Disabled Express signature header.
+- Deterministic integration tests for create/list/get and validation failures.
+- Node.js 22 build/test/runtime dependency audit gates.
+- Non-root container packaging and live health smoke test.
 
-**Implementation evidence:** 1 test-related file(s) detected; 1 dependency or package manifest(s) detected; 2 build/CI/infrastructure signal(s) detected; and 3 documentation or governance file(s) detected. Test filenames observed include `tests/index.test.ts`. Dependency or package files include `package.json`. Build, CI, or infrastructure signals include `Dockerfile`, `.github/workflows/ci.yml`.
+## Run
 
-**Current status:** The repository is tracked on the `main` branch. The existing source tree, configuration, tests, workflows, and documentation remain authoritative for supported behavior and maturity. A code audit is not a production-readiness certification, and the presence of a test or workflow file does not establish that all checks pass.
+```bash
+npm install
+npm run build
+npm test
+PORT=3000 npm start
+```
 
-**Relationship to the wider portfolio:** This repository is one focused component of the broader Skyler Blue Spillers portfolio across AI, software engineering, cloud and DevOps, cybersecurity, blockchain, finance, education, social systems, and creative work. It may provide a service boundary, implementation pattern, experiment, archive, or reusable idea for related repositories. Treat repositories as technical dependencies only where documented interfaces and verified project requirements support that relationship.
+Example:
 
-**Quality and security note:** No obvious secret-like pattern was detected by the limited static scan; this is not a substitute for a security audit. No TODO/FIXME marker was detected in the scanned text files.
+```bash
+curl -sS http://127.0.0.1:3000/v1/posts \
+  -H 'content-type: application/json' \
+  --data '{"title":"Engineering Notes","content":"A bounded content entry for the API.","tags":["sky"]}'
+```
 
----
+## Scope limitations
 
-# Ts Nextjs Blog
+State is process-local and resets on restart. This repository does **not** provide Next.js rendering, Markdown processing, authentication, authorization, durable storage, media uploads, moderation, search indexing, multi-tenant isolation, HA, or production deployment.
 
-![GitHub stars](https://img.shields.io/github/stars/skylerblue333/TS-NextJS-Blog?style=flat-square)
-![GitHub license](https://img.shields.io/github/license/skylerblue333/TS-NextJS-Blog?style=flat-square)
+## SKYCOIN4444 integration
 
-## 🌟 Overview
-**TS-NextJS-Blog** is a professional-grade project within the **SkyCoin4444** ecosystem. It focuses on delivering high-value solutions in the domain of **TypeScript, JavaScript**.
-
-## 🚀 Key Features
-- **Scalable Architecture**: Designed for enterprise-level growth and performance.
-- **Modern Standards**: Implements best practices for clean code and maintainability.
-- **Robust Integration**: Built to work seamlessly within modern cloud-native environments.
-
-## 🛠️ Technology Stack
-- **Primary Domain**: TypeScript, JavaScript
-- **Ecosystem**: SkyCoin4444 Digital Platform
-
-## 📂 Structure
-The project is organized into a modular structure to ensure clarity and ease of development.
-
-## 👨‍💻 Author
-**Skyler Blue Spillers**
-*Professional Chess Player & Software Engineer*
-
----
-*Powered by SkyCoin4444*
+The bounded post contract can be consumed as a small content adapter or used as a reference implementation. Authoritative identity, persistence, moderation, and production infrastructure must remain external until those capabilities are explicitly implemented and verified.
